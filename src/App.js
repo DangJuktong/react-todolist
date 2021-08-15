@@ -1,25 +1,55 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { Component } from 'react';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+import TodoList from './components/TodoList';
+import TodoInput from './components/TodoInput'; 
+
+class App extends Component {
+
+  state = {
+    todoList: []
+  }
+
+  addTodoItem (todoItem) {
+    this.state.todoList.push(todoItem);
+    this.setState({
+      todoList: this.state.todoList
+    });
+  }
+
+  setCompleted (id) {
+    const todoList = this.state.todoList.map((item) => {
+      if(item.id === id) {
+        item.completed = !item.completed;
+      }
+      return item;
+    })
+
+    this.setState({ todoList })
+  }
+
+  removeTodoItem (id) {
+    const todoList = this.state.todoList.filter( item => item.id !== id )
+    this.setState({ todoList })
+  }
+
+  render () {
+
+    const { todoList } = this.state;
+
+    return (
+      <div className="app">
+        <TodoInput
+         addTodoItem={ this.addTodoItem.bind(this) }
+        />
+        <TodoList
+          todoList={ todoList }
+          setCompleted={ this.setCompleted.bind(this) }
+          removeTodoItem={ this.removeTodoItem.bind(this) }
+        />
+      </div>
+    )
+  }
 }
+
 
 export default App;
